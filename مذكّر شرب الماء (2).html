@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>مذكّر شرب الماء</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef6f7;--ink:#0d3b4a;--mute:#5b7c86;--card:#fff;--line:#d3e5e8;--water:#1c9fc4;--water2:#5ec4dc;--btn:#0d3b4a;--btnink:#fff;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#08222b;--ink:#e3f4f8;--mute:#8fb3bd;--card:#0f3340;--line:#1d4856;--water:#2aa9d0;--water2:#6fd0e6;--btn:#e3f4f8;--btnink:#08222b}}
+:root[data-theme="dark"]{--bg:#08222b;--ink:#e3f4f8;--mute:#8fb3bd;--card:#0f3340;--line:#1d4856;--water:#2aa9d0;--water2:#6fd0e6;--btn:#e3f4f8;--btnink:#08222b}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Tajawal",Tahoma,Arial,sans-serif;min-height:100vh}
+main{max-width:440px;margin:0 auto;padding:20px 18px 32px;display:flex;flex-direction:column;align-items:center;gap:18px}
+h1{font-size:22px;font-weight:800;margin:6px 0 0}
+#banner{display:none;width:100%;background:var(--water);color:#fff;padding:14px 16px;border-radius:14px;font-weight:800;text-align:center;font-size:18px}
+#banner.show{display:block}
+.glass{position:relative;width:190px;height:250px;border:4px solid var(--ink);border-top-width:2px;border-radius:10px 10px 46px 46px;overflow:hidden;background:var(--card)}
+.fill{position:absolute;inset:auto 0 0 0;height:0;background:linear-gradient(var(--water2),var(--water));transition:height .7s ease}
+.fill::before{content:"";position:absolute;top:-9px;left:-50%;width:200%;height:18px;background:radial-gradient(circle at 12px 18px,var(--water2) 11px,transparent 12px) repeat-x;background-size:24px 18px}
+.num{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-shadow:0 1px 6px rgba(0,0,0,.25);color:#fff;mix-blend-mode:normal;pointer-events:none}
+.num b{font-size:54px;font-weight:800;line-height:1}
+.num span{font-size:15px}
+.glass .num{color:var(--ink);text-shadow:none}
+.sub{color:var(--mute);margin:0;text-align:center}
+.row{display:flex;gap:10px;width:100%}
+button{font-family:inherit;font-size:17px;font-weight:800;border:0;border-radius:14px;padding:15px 16px;cursor:pointer;background:var(--btn);color:var(--btnink);flex:1}
+button.alt{background:transparent;color:var(--ink);border:2px solid var(--line);flex:0 0 auto}
+button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid var(--water);outline-offset:2px}
+.card{width:100%;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:14px}
+.line{display:flex;justify-content:space-between;align-items:center;gap:10px}
+select{font-family:inherit;font-size:16px;padding:8px 10px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+.sw{width:52px;height:30px;border-radius:30px;background:var(--line);position:relative;border:0;padding:0;flex:0 0 auto}
+.sw::after{content:"";position:absolute;top:3px;right:3px;width:24px;height:24px;border-radius:50%;background:#fff;transition:transform .2s}
+.sw[aria-checked="true"]{background:var(--water)}
+.sw[aria-checked="true"]::after{transform:translateX(-22px)}
+.hint{font-size:13px;color:var(--mute);margin:0}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<main>
+  <h1>مذكّر شرب الماء</h1>
+  <div id="banner" role="alert">حان وقت شرب كوب ماء 💧</div>
+  <div class="glass" aria-hidden="true"><div class="fill" id="fill"></div><div class="num"><b id="cnt">0</b><span id="of"></span></div></div>
+  <p class="sub" id="status"></p>
+  <div class="row">
+    <button id="add">شربتُ كوباً</button>
+    <button class="alt" id="undo" aria-label="تراجع">تراجع</button>
+  </div>
+  <div class="card">
+    <div class="line"><span>التذكير</span><button class="sw" id="sw" role="switch" aria-checked="false" aria-label="تفعيل التذكير"></button></div>
+    <div class="line"><span>كل</span>
+      <select id="int"><option value="30">30 دقيقة</option><option value="45">45 دقيقة</option><option value="60">ساعة</option><option value="90">ساعة ونصف</option><option value="120">ساعتان</option></select></div>
+    <div class="line"><span>الهدف اليومي</span>
+      <select id="goal"><option>6</option><option>8</option><option>10</option><option>12</option></select></div>
+    <p class="hint" id="next"></p>
+    <p class="hint">يعمل التذكير ما دامت هذه الصفحة مفتوحة. أبقِها مفتوحة في المتصفح، وفعّل الإشعارات عند الطلب.</p>
+  </div>
+</main>
+<script>
+var S={date:'',count:0,goal:8,interval:60,on:false,next:0};
+function today(){return new Date().toDateString()}
+function load(){try{var r=localStorage.getItem('water-app');if(r)S=Object.assign(S,JSON.parse(r))}catch(e){}
+  if(S.date!==today()){S.date=today();S.count=0}}
+function save(){try{localStorage.setItem('water-app',JSON.stringify(S))}catch(e){}}
+var $=function(i){return document.getElementById(i)};
+function render(){
+  $('cnt').textContent=S.count;$('of').textContent='من '+S.goal+' أكواب';
+  $('fill').style.height=Math.min(100,S.count/S.goal*100)+'%';
+  $('status').textContent=S.count>=S.goal?'أحسنت! أكملت هدف اليوم 🎉':'متبقٍّ '+(S.goal-S.count)+' من الأكواب (الكوب ≈ 250 مل)';
+  $('sw').setAttribute('aria-checked',S.on);$('int').value=S.interval;$('goal').value=S.goal;
+}
+function beep(){try{var c=new (window.AudioContext||window.webkitAudioContext)(),o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.frequency.value=660;g.gain.setValueAtTime(.15,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+.6);o.start();o.stop(c.currentTime+.6)}catch(e){}}
+function fire(){
+  $('banner').classList.add('show');beep();
+  try{if('Notification' in window&&Notification.permission==='granted')new Notification('حان وقت شرب الماء 💧',{body:'اشرب كوب ماء الآن'})}catch(e){}
+  try{navigator.vibrate&&navigator.vibrate(200)}catch(e){}
+}
+function schedule(){S.next=Date.now()+S.interval*60000;save()}
+function tick(){
+  if(S.date!==today()){S.date=today();S.count=0;save();render()}
+  if(!S.on){$('next').textContent='التذكير متوقف.';return}
+  var left=S.next-Date.now();
+  if(left<=0){fire();schedule();left=S.next-Date.now()}
+  var m=Math.floor(left/60000),s=Math.floor(left/1000)%60;
+  $('next').textContent='التذكير القادم بعد '+m+':'+(s<10?'0':'')+s;
+}
+$('add').onclick=function(){S.count++;$('banner').classList.remove('show');if(S.on)schedule();save();render();tick()};
+$('undo').onclick=function(){if(S.count>0){S.count--;save();render()}};
+$('sw').onclick=function(){S.on=!S.on;
+  if(S.on){schedule();try{if('Notification' in window&&Notification.permission==='default')Notification.requestPermission()}catch(e){}beep()}
+  save();render();tick()};
+$('int').onchange=function(){S.interval=+this.value;if(S.on)schedule();save();tick()};
+$('goal').onchange=function(){S.goal=+this.value;save();render()};
+$('banner').onclick=function(){this.classList.remove('show')};
+load();render();tick();setInterval(tick,1000);
+</script>
+</body>
+</html>
